@@ -1,34 +1,31 @@
 let clearButton;
 let canvas;
 
-let doodleClassifier;
-let resultsDiv; //just to pass the result to a HTML element
+let myColor = ("#262532");
 
 let bg;
 
-let myColor = ("#262532");
+// VARIABLES FOR THE RANDOM IMAGE PICKER
+let cards = []; // CREATE AN EMPTY ARRAY TO STORE VARIABLES
+let numCards = 4;
+var toggle_loop = false;
 
 function preload() {
   bg = loadImage('assets/sfondo-main.svg');
+  //store images  by using a for loop and concatenation
+  //i rename all my images using the same scheme: pers + 0,1,2... + .png
+  for (let i = 0; i < numCards; i++) {
+      cards[i] = loadImage("./assets/inspo/inspo-" + i + '.svg');
+  }
 }
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
 
   imageMode(CENTER);
-
-  
+  noLoop();
+  imageMode(CENTER);
   image(bg, width/2, height/2, windowWidth, windowHeight); //background
-
-  //i need to set two arguments: in the first one i load the doodlenet pre-trained model
-  //the second one is the a callback function for when the model is ready
-  doodleClassifier = ml5.imageClassifier('DoodleNet', modelReady);
-  resultsDiv = createDiv('Draw here!');
-  resultsDiv.style('color', '#3048A9');
-  resultsDiv.style(
-    "position:absolute; right: 50%; font-weight: 600; padding-top: 40%; transform: translate(50%,-50%); text-align: center; font-family:'Clash Display'; font-size:20px;"
-  );
-  resultsDiv.position(16, 0);
 
   //buttonClear links to a new page
   clearButton = createImg('./assets/freccia-3.svg'); //the button is linked to an image
@@ -38,6 +35,20 @@ function setup() {
     "position:absolute; padding: 28px;"
   );
   clearButton.mousePressed(clearCanvas); //set the function after the action
+
+  let h1 = createElement('h1', 'Shake!');
+  h1.style('color', '#3048A9');
+  h1.style(
+    "position:absolute; right: 50%; font-weight: 600; padding-top: 35%; transform: translate(50%,-50%); text-align: center; font-family:'Clash Display'; font-size:20px;"
+  );
+  h1.position(16, 0);
+
+  let h2 = createElement('h1', 'trace the doodle');
+  h2.style('color', '#DBD0CD');
+  h2.style(
+    "position:absolute; right: 50%; font-weight: 600; padding-top: 50%; transform: translate(50%,-50%); text-align: center; font-family:'Clash Display'; font-size:20px;"
+  );
+  h2.position(16, 0);
 
   //saveButton links to a new page
   saveButton = createImg('./assets/freccia-4.svg'); //the button is linked to an image
@@ -49,13 +60,13 @@ function setup() {
   saveButton.mousePressed(saveFrame); //set the function after the actio
 
   //inspoButton links to a new page
-  inspoButton = createImg('./assets/button-1.svg'); //the button is linked to an image
+  inspoButton = createImg('./assets/button-2.svg'); //the button is linked to an image
   inspoButton.position(width/2, height/1.2); //set the position
   inspoButton.size(198, 60); //set the size
   inspoButton.style(
     "position:absolute; padding: 28px; transform: translate(-50%,0px);"
   );
-  inspoButton.mousePressed(goToInspo); //set the function after the actio
+  inspoButton.mousePressed(goToMainPage); //set the function after the actio
 
   //buttonBack links to a new page
   buttonBack = createImg('./assets/freccia-2.svg'); //the button is linked to an image
@@ -148,28 +159,7 @@ function changeRed() {
 
 //color change to BLACK
 function changeBlack() {
-	myColor = ("#262532");
-}
-
-//set the callback function
-function modelReady() {
-  //take the canvas and pass it to the model for a prediction
-  doodleClassifier.classify(canvas, gotResults);
-  //in this way i call the gotResult function that collects all the predictions of the doodle made in the canvas
-}
-
-function gotResults(error, results) {
-  //first i set a callback function in case of an error
-  if (error) {
-    console.error(error);
-    return; //if something went wrong, just repeat the function
-  }
-  //if everything got well, get the result
-  //console.log(results);
-  let content = `${results[0].label}`;
-
-  resultsDiv.html('is  that... ' + content + '?'); //classify the canvas
-  doodleClassifier.classify(canvas, gotResults); //show new results everytime 
+	myColor = ("#262532");  
 }
 
 function draw() {
@@ -180,20 +170,49 @@ function draw() {
   }
 }
 
-function goToMenuPage() {
-  window.open("index.html", "_self");
+function goToMainPage() {
+  window.open("main.html", "_self");
 }
 
-function goToInspo() {
-  window.open("inspo.html", "_self");
+function goToMenuPage() {
+  window.open("index.html", "_self");
 }
 
 function saveFrame() {
   save("myDoodle.png");
 }
 
-
 // this prevents dragging screen around
 function touchMoved() {
 	return false;
+}
+
+// function mousePressed() {
+//   if (toggle_loop) {
+//     noLoop();
+//     toggle_loop = false;
+//   } else {
+//     //draw the random images
+//     //condition: if my general variable "stopRunningDraw" is 0, draw a random image (randoImg) picked from the array "cards"
+//      //setting the variable "randoImg" that corresponds to the array "cards"
+//      loop();
+//      toggle_loop = true;
+//      let randoImg = random(cards);
+//      image(randoImg, width/2, height/2, windowWidth, windowHeight); //draw "randoImg" 
+//    }
+// }
+
+function deviceShaken() {
+  if (toggle_loop) {
+    noLoop();
+    toggle_loop = false;
+  } else {
+    //draw the random images
+    //condition: if my general variable "stopRunningDraw" is 0, draw a random image (randoImg) picked from the array "cards"
+     //setting the variable "randoImg" that corresponds to the array "cards"
+     loop();
+     toggle_loop = true;
+     let randoImg = random(cards);
+     image(randoImg, width/2, height/2, windowWidth, windowHeight); //draw "randoImg" 
+   }
 }
