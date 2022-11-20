@@ -22,6 +22,8 @@ function preload() {
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
 
+  setMoveThreshold(2);
+
   imageMode(CENTER);
   noLoop();
   imageMode(CENTER);
@@ -216,3 +218,11 @@ function deviceShaken() {
      image(randoImg, width/2, height/2, windowWidth, windowHeight); //draw "randoImg" 
    }
 }
+
+// request permissions on iOS
+function touchEnded(event) {
+	if(DeviceOrientationEvent && DeviceOrientationEvent.requestPermission) {
+		DeviceOrientationEvent.requestPermission()
+	}
+}
+
