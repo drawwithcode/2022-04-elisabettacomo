@@ -5,18 +5,15 @@ let myColor = ("#262532");
 
 let bg;
 
-// VARIABLES FOR THE RANDOM IMAGE PICKER
-let cards = []; // CREATE AN EMPTY ARRAY TO STORE VARIABLES
-let numCards = 4;
-var toggle_loop = false;
+let myInspo = 0;
+
 
 function preload() {
   bg = loadImage('assets/sfondo-main.svg');
-  //store images  by using a for loop and concatenation
-  //i rename all my images using the same scheme: pers + 0,1,2... + .png
-  for (let i = 0; i < numCards; i++) {
-      cards[i] = loadImage("./assets/inspo/inspo-" + i + '.svg');
-  }
+  inspo0 = loadImage('assets/inspo/inspo-0.svg');
+  inspo1 = loadImage('assets/inspo/inspo-1.svg');
+  inspo2 = loadImage('assets/inspo/inspo-2.svg');
+  inspo3 = loadImage('assets/inspo/inspo-3.svg');
 }
 
 function setup() {
@@ -164,6 +161,24 @@ function changeBlack() {
 	myColor = ("#262532");  
 }
 
+
+function mouseClicked() {
+  myInspo+=1;
+
+  if (myInspo === 1) {
+    image(inspo0, width/2, height/2, windowWidth, windowHeight);
+  }
+  if (myInspo === 2) {
+    image(inspo1, width/2, height/2, windowWidth, windowHeight);
+  } else if (myInspo === 3) {
+    image(inspo2, width/2, height/2, windowWidth, windowHeight);
+  } else if (myInspo === 4) {
+    image(inspo3, width/2, height/2, windowWidth, windowHeight);
+  } else if (myInspo >= 4) {
+    myInspo=0;
+  }
+}
+
 function draw() {
   if (mouseIsPressed) {
     strokeWeight(16);
@@ -186,7 +201,7 @@ function saveFrame() {
 
 // this prevents dragging screen around
 function touchMoved() {
-	return false;
+  return false;
 }
 
 // function mousePressed() {
@@ -204,20 +219,7 @@ function touchMoved() {
 //    }
 // }
 
-function deviceShaken() {
-  if (toggle_loop) {
-    noLoop();
-    toggle_loop = false;
-  } else {
-    //draw the random images
-    //condition: if my general variable "stopRunningDraw" is 0, draw a random image (randoImg) picked from the array "cards"
-     //setting the variable "randoImg" that corresponds to the array "cards"
-     loop();
-     toggle_loop = true;
-     let randoImg = random(cards);
-     image(randoImg, width/2, height/2, windowWidth, windowHeight); //draw "randoImg" 
-   }
-}
+
 
 // request permissions on iOS
 function touchEnded(event) {
